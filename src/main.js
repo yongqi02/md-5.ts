@@ -1,3 +1,4 @@
+'use strict';
 /**
  * @author heyq
  * @create 2023/7/18
@@ -5,38 +6,32 @@
  * @project md-5.ts
  * @organization nizhou-studio
  */
-
-function f(info: string) {
-
+Object.defineProperty(exports, '__esModule', { value: true });
+function f(info) {
 	/*
   字符串转二进制模块
    */
-	const bin: number[] = [];
-	for (let i = 0; i < info.length * 8; i += 8) {
+	var bin = [];
+	for (var i = 0; i < info.length * 8; i += 8) {
 		bin[i >> 5] |= (info.charCodeAt(i / 8) & 255) << (i % 32);
 	}
-
 	/*
   填充字符串模块
    */
 	bin[info.length * 8 >> 5] |= 0x80 << (info.length * 8 % 32);
 	bin[(((info.length * 8 + 64) >>> 9) << 4) + 14] = info.length * 8;
-
-	let a = 1732584193;
-	let b = -271733879;
-	let c = -1732584194;
-	let d = 271733878;
-
+	var a = 1732584193;
+	var b = -271733879;
+	var c = -1732584194;
+	var d = 271733878;
 	/*
   编码模块
    */
-	for (let i = 0; i < bin.length; i += 16) {
-
-		const a0 = a;
-		const b0 = b;
-		const c0 = c;
-		const d0 = d;
-
+	for (var i = 0; i < bin.length; i += 16) {
+		var a0 = a;
+		var b0 = b;
+		var c0 = c;
+		var d0 = d;
 		a = ff(a, b, c, d, bin[i], 7, -680876936);
 		d = ff(d, a, b, c, bin[i + 1], 12, -389564586);
 		c = ff(c, d, a, b, bin[i + 2], 17, 606105819);
@@ -101,54 +96,41 @@ function f(info: string) {
 		d = ii(d, a, b, c, bin[i + 11], 10, -1120210379);
 		c = ii(c, d, a, b, bin[i + 2], 15, 718787259);
 		b = ii(b, c, d, a, bin[i + 9], 21, -343485551);
-
 		a = add(a, a0);
 		b = add(b, b0);
 		c = add(c, c0);
 		d = add(d, d0);
-
 	}
-
-	const result = [a, b, c, d];
-
+	var result = [a, b, c, d];
 	/*
   编码结果转16进制模块
    */
-	const hex_tab = '0123456789ABCDEF';
-	let str = '';
-	for (let i = 0; i < result.length * 4; i++) {
+	var hex_tab = '0123456789ABCDEF';
+	var str = '';
+	for (var i = 0; i < result.length * 4; i++) {
 		str += hex_tab.charAt((result[i >> 2] >> ((i % 4) * 8 + 4)) & 0xF) +
-      hex_tab.charAt((result[i >> 2] >> ((i % 4) * 8)) & 0xF);
+            hex_tab.charAt((result[i >> 2] >> ((i % 4) * 8)) & 0xF);
 	}
-
 	return str;
-
-	function add(x: number, y: number) {
-		const lsw = (x & 0xFFFF) + (y & 0xFFFF);
-		const msw = (x >> 16) + (y >> 16) + (lsw >> 16);
+	function add(x, y) {
+		var lsw = (x & 0xFFFF) + (y & 0xFFFF);
+		var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
 		return (msw << 16) | (lsw & 0xFFFF);
 	}
-
-	function rol(num: number, cnt: number) {
+	function rol(num, cnt) {
 		return (num << cnt) | (num >>> (32 - cnt));
 	}
-
-	function ff(a: number, b: number, c: number, d: number, x: number, s: number, t: number) {
+	function ff(a, b, c, d, x, s, t) {
 		return add(rol(add(add(a, (b & c) | ((~b) & d)), add(x, t)), s), b);
 	}
-
-	function gg(a: number, b: number, c: number, d: number, x: number, s: number, t: number) {
+	function gg(a, b, c, d, x, s, t) {
 		return add(rol(add(add(a, (b & d) | (c & (~d))), add(x, t)), s), b);
 	}
-
-	function hh(a: number, b: number, c: number, d: number, x: number, s: number, t: number) {
+	function hh(a, b, c, d, x, s, t) {
 		return add(rol(add(add(a, b ^ c ^ d), add(x, t)), s), b);
 	}
-
-	function ii(a: number, b: number, c: number, d: number, x: number, s: number, t: number) {
+	function ii(a, b, c, d, x, s, t) {
 		return add(rol(add(add(a, c ^ (b | (~d))), add(x, t)), s), b);
 	}
-
 }
-
-export default f;
+exports.default = f;
